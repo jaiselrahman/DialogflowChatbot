@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <FrameLayout
         android:id="@+id/outgoing_layout_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_gravity="end"
+        android:layout_marginStart="60dp"
         android:layout_marginLeft="60dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:background="@drawable/balloon_outgoing_normal">
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/chat_outgoing_bubble">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
             android:orientation="horizontal">
 
             <TextView
@@ -24,12 +29,14 @@
                 style="@style/chat_timings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="11:15 PM" />
+                android:layout_marginRight="1dp"
+                android:layout_marginEnd="1dp"
+                tools:text="11:15 PM" />
 
             <ImageView
                 android:id="@+id/user_reply_status"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/message_wait" />
 
@@ -41,8 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="all"
-            android:text="Rahul Agrawal" />
+            tools:text="Hi" />
 
     </FrameLayout>
-
-</RelativeLayout>
+</FrameLayout>

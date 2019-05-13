@@ -15,7 +15,8 @@ public class JsonUtils {
             return defaultValue;
         }
     }
-    static boolean getBoolean(JSONObject jsonObject, String name, boolean defaultValue){
+
+    static boolean getBoolean(JSONObject jsonObject, String name, boolean defaultValue) {
         try {
             return jsonObject.getBoolean(name);
         } catch (JSONException e) {

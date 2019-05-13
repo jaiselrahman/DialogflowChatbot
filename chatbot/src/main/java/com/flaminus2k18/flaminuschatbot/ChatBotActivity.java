@@ -2,10 +2,6 @@ package com.flaminus2k18.flaminuschatbot;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -13,11 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.flaminus2k18.flaminuschatbot.adapter.ChatsAdapter;
 import com.flaminus2k18.flaminuschatbot.model.Cards;
 import com.flaminus2k18.flaminuschatbot.model.Message;
 import com.flaminus2k18.flaminuschatbot.model.MessageType;
 import com.flaminus2k18.flaminuschatbot.model.Status;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -201,8 +202,8 @@ public class ChatBotActivity extends AppCompatActivity {
                                         cardMessage.setMessageType(MessageType.OTHER_CARDS);
                                     }
                                     Cards card = new Cards();
-                                    card.setTitle(JsonUtils.getString(jsonMessages.getJSONObject(i),"title", null));
-                                    card.setSubtitle(JsonUtils.getString(jsonMessages.getJSONObject(i),"subtitle", null));
+                                    card.setTitle(JsonUtils.getString(jsonMessages.getJSONObject(i), "title", null));
+                                    card.setSubtitle(JsonUtils.getString(jsonMessages.getJSONObject(i), "subtitle", null));
                                     card.setImgUrl(JsonUtils.getString(jsonMessages.getJSONObject(i), "imageUrl", null));
                                     cards.add(card);
                                     break;

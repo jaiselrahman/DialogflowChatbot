@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/incoming_layout_bubble"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginEnd="60dp"
+    android:layout_marginRight="60dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="3dp"
+    android:background="@drawable/chat_incomming_bubble">
 
-    <FrameLayout
-        android:id="@+id/incoming_layout_bubble"
+    <TextView
+        android:id="@+id/textview_time"
+        style="@style/chat_timings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="60dp"
-        android:background="@drawable/balloon_incoming_normal">
+        android:layout_gravity="bottom|end"
+        tools:text="11:15 PM" />
 
-        <TextView
-            android:id="@+id/textview_time"
-            style="@style/chat_timings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:text="11:15 PM" />
+    <TextView
+        android:id="@+id/textview_message"
+        style="@style/chat_text_message_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        tools:text="Hello!\nHow are you?" />
 
-        <TextView
-            android:id="@+id/textview_message"
-            style="@style/chat_text_message_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="all"
-            android:text="Rahul Agrawal is a good boy but he does not know what he wants." />
-
-    </FrameLayout>
-
-</RelativeLayout>
+</FrameLayout>

@@ -1,13 +1,14 @@
 package com.flaminus2k18.flaminuschatbot.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.flaminus2k18.flaminuschatbot.R;
 import com.flaminus2k18.flaminuschatbot.model.Message;
@@ -35,7 +36,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = chatMessages.elementAt(position);
 
-        if(message.getMessageType() == MessageType.OTHER_CARDS) {
+        if (message.getMessageType() == MessageType.OTHER_CARDS) {
             LinearLayoutManager lm = new LinearLayoutManager(context);
             lm.setOrientation(LinearLayoutManager.HORIZONTAL);
             holder.recyclerView.setLayoutManager(lm);
@@ -69,7 +70,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         } else if (viewType == MessageType.OTHER.ordinal()) {
             v = LayoutInflater.from(context).inflate(R.layout.chat_user1_item, parent, false);
             return new ViewHolder(v, MessageType.OTHER);
-        } else if(viewType == MessageType.OTHER_CARDS.ordinal()) {
+        } else if (viewType == MessageType.OTHER_CARDS.ordinal()) {
             v = LayoutInflater.from(context).inflate(R.layout.chat_user1_card_item, parent, false);
             return new ViewHolder(v, MessageType.OTHER_CARDS);
         }
@@ -93,7 +94,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
 
         ViewHolder(View v, MessageType messageType) {
             super(v);
-            if(messageType == MessageType.OTHER_CARDS) {
+            if (messageType == MessageType.OTHER_CARDS) {
                 recyclerView = v.findViewById(R.id.cards);
             }
             message = v.findViewById(R.id.textview_message);
