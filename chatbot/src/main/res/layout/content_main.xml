@@ -9,7 +9,7 @@
     tools:context="com.flaminus2k18.flaminuschatbot.ChatBotActivity"
     tools:showIn="@layout/activity_main">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -70,7 +70,7 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/move_to_down"
         android:layout_width="32dp"
         android:layout_height="32dp"
