@@ -3,7 +3,6 @@ package com.flaminus2k18.flaminuschatbot;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,23 +18,25 @@ import com.flaminus2k18.flaminuschatbot.model.Message;
 import com.flaminus2k18.flaminuschatbot.model.MessageType;
 import com.flaminus2k18.flaminuschatbot.model.Status;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
+import com.google.api.gax.core.FixedCredentialsProvider;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.ServiceAccountCredentials;
+import com.google.cloud.dialogflow.v2.DetectIntentResponse;
+import com.google.cloud.dialogflow.v2.Intent;
+import com.google.cloud.dialogflow.v2.QueryInput;
+import com.google.cloud.dialogflow.v2.SessionName;
+import com.google.cloud.dialogflow.v2.SessionsClient;
+import com.google.cloud.dialogflow.v2.SessionsSettings;
+import com.google.cloud.dialogflow.v2.TextInput;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
-import ai.api.AIServiceException;
-import ai.api.android.AIConfiguration;
-import ai.api.android.AIDataService;
-import ai.api.model.AIEvent;
-import ai.api.model.AIRequest;
-import ai.api.model.AIResponse;
-import ai.api.model.ResponseMessage;
 
 public class ChatBotActivity extends AppCompatActivity {
     private static final String TAG = ChatBotActivity.class.getSimpleName();
@@ -44,19 +45,24 @@ public class ChatBotActivity extends AppCompatActivity {
     private RecyclerView chatList;
     private TextView messageText;
     private Message currentMessage;
-    private AIRequest aiRequest;
-    private AIDataService aiDataService;
+    private SessionsClient sessionsClient;
+    private SessionName sessionName;
+    private UUID uuid = UUID.randomUUID();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final AIConfiguration config = new AIConfiguration(getString(R.string.access_key),
-                AIConfiguration.SupportedLanguages.English,
-                AIConfiguration.RecognitionEngine.System);
-        aiDataService = new AIDataService(this, config);
-        aiRequest = new AIRequest();
+        try {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(getResources().openRawResource(R.raw.dialogflow_credential));
+            String projectID = ((ServiceAccountCredentials) credentials).getProjectId();
+            sessionsClient = SessionsClient.create(SessionsSettings.newBuilder().setCredentialsProvider(FixedCredentialsProvider.create(credentials)).build());
+            sessionName = SessionName.of(projectID, uuid.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         sendWelcomeEvent();
 
         final FloatingActionButton fab = findViewById(R.id.move_to_down);
@@ -80,9 +86,9 @@ public class ChatBotActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 int position = linearLayoutManager.findLastCompletelyVisibleItemPosition();
                 if (position != RecyclerView.NO_POSITION && position >= chatsAdapter.getItemCount() - 4) {
-                    fab.setVisibility(View.GONE);
+                    fab.hide();
                 } else if (fab.getVisibility() != View.VISIBLE) {
-                    fab.setVisibility(View.VISIBLE);
+                    fab.show();
                 }
             }
         });
@@ -101,9 +107,8 @@ public class ChatBotActivity extends AppCompatActivity {
                 message.setTimeStamp(new Date().getTime());
                 message.setMessageType(MessageType.MINE);
                 chatMessages.add(message);
-                aiRequest.setQuery(message.getText());
                 currentMessage = message;
-                new RequestTask(ChatBotActivity.this).execute(aiRequest);
+                sendMessage(message.getText());
                 chatsAdapter.notifyDataSetChanged();
                 messageText.setText("");
                 chatList.smoothScrollToPosition(chatsAdapter.getItemCount());
@@ -112,110 +117,84 @@ public class ChatBotActivity extends AppCompatActivity {
     }
 
     void sendWelcomeEvent() {
-        AIRequest aiRequest = new AIRequest();
-        aiRequest.setEvent(new AIEvent("CUSTOM_WELCOME"));
-        new RequestTask(this).execute(aiRequest);
+        new RequestTask(this).execute();
     }
 
-    static class RequestTask extends AsyncTask<AIRequest, Void, AIResponse> {
+    private void sendMessage(String message) {
+        new RequestTask(this).execute(message);
+    }
 
-        private Gson gson = new Gson();
+    static class RequestTask extends AsyncTask<String, Void, DetectIntentResponse> {
+
         private WeakReference<ChatBotActivity> activity;
-        private AIDataService aiDataService;
+        private SessionsClient sessionsClient;
 
         RequestTask(ChatBotActivity activity) {
             this.activity = new WeakReference<>(activity);
-            this.aiDataService = activity.aiDataService;
+            this.sessionsClient = activity.sessionsClient;
         }
 
         @Override
-        protected AIResponse doInBackground(AIRequest... requests) {
-            final AIRequest request = requests[0];
+        protected DetectIntentResponse doInBackground(String... requests) {
             try {
-                return aiDataService.request(request);
-            } catch (AIServiceException e) {
-                Log.i(TAG, e.getMessage());
+                return sessionsClient.detectIntent(activity.get().sessionName,
+                        QueryInput.newBuilder()
+                                .setText(TextInput.newBuilder()
+                                        .setText(requests[0])
+                                        .setLanguageCode("en-US")
+                                        .build())
+                                .build());
+            } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(AIResponse aiResponse) {
-            if (aiResponse != null) {
+        protected void onPostExecute(DetectIntentResponse response) {
+            if (response != null) {
                 if (activity.get().currentMessage != null) {
                     activity.get().currentMessage.setStatus(com.flaminus2k18.flaminuschatbot.model.Status.SENT);
                 }
 
-                Vector<Cards> cards = null;
+                ArrayList<Cards> cards = null;
                 Message cardMessage = null;
 
-                List<ResponseMessage> messages = aiResponse.getResult().getFulfillment().getMessages();
-                if (messages != null) {
-                    try {
-                        JSONArray jsonMessages = new JSONArray(gson.toJson(messages));
-                        for (int i = 0; i < jsonMessages.length(); i++) {
-                            String type = JsonUtils.getString(jsonMessages.getJSONObject(i), "type", "none");
-                            switch (type) {
-                                case "SPEECH":
-                                    String text = jsonMessages.getJSONObject(i).getJSONArray("speech").get(0).toString();
-                                    if (!TextUtils.isEmpty(text)) {
-                                        Message msg = new Message();
-                                        msg.setTimeStamp(new Date().getTime());
-                                        msg.setMessageType(MessageType.OTHER);
-                                        msg.setText(text);
-                                        addMessage(msg);
-                                    }
-                                    break;
-                                case "PAYLOAD":
-                                    try {
-                                        Boolean isEventsLists = jsonMessages.getJSONObject(i).getJSONObject("payload").getBoolean("EVENT_LISTS");
-                                        if (isEventsLists) {
-                                            AIRequest technicalEvent = new AIRequest();
-                                            technicalEvent.setQuery("technical events");
-                                            new RequestTask(activity.get()).execute(technicalEvent);
-
-                                            AIRequest nonTechnicalEvents = new AIRequest();
-                                            nonTechnicalEvents.setQuery("non technical events");
-                                            new RequestTask(activity.get()).execute(nonTechnicalEvents);
-
-                                            AIRequest onlineEvents = new AIRequest();
-                                            onlineEvents.setQuery("online events");
-                                            new RequestTask(activity.get()).execute(onlineEvents);
-                                            return;
-                                        } else {
-                                            text = JsonUtils.getString(jsonMessages.getJSONObject(i).getJSONObject("payload"), "text", null);
-                                            Message message = new Message();
-                                            message.setTimeStamp(new Date().getTime());
-                                            message.setMessageType(MessageType.OTHER);
-                                            message.setText(text.replaceAll("\\\\n", "\\\n"));
-                                            addMessage(message);
-                                        }
-                                    } catch (JSONException ex) {
-                                        Log.d(TAG, ex.getMessage());
-                                    }
-                                    break;
-                                case "CARD":
-                                    if (cards == null) {
-                                        cards = new Vector<>();
-                                        cardMessage = new Message();
-                                        cardMessage.setTimeStamp(aiResponse.getTimestamp().getTime());
-                                        cardMessage.setMessageType(MessageType.OTHER_CARDS);
-                                    }
-                                    Cards card = new Cards();
-                                    card.setTitle(JsonUtils.getString(jsonMessages.getJSONObject(i), "title", null));
-                                    card.setSubtitle(JsonUtils.getString(jsonMessages.getJSONObject(i), "subtitle", null));
-                                    card.setImgUrl(JsonUtils.getString(jsonMessages.getJSONObject(i), "imageUrl", null));
-                                    cards.add(card);
-                                    break;
-                            }
+                List<Intent.Message> messages = response.getQueryResult().getFulfillmentMessagesList();
+                for (Intent.Message m : messages) {
+                    if (m.hasPayload()) {
+                        boolean isEventsLists = m.getPayload().getFieldsMap().containsKey("EVENT_LISTS");
+                        if (isEventsLists)
+                            isEventsLists = m.getPayload().getFieldsMap().get("EVENT_LISTS").getBoolValue();
+                        if (isEventsLists) {
+                            new RequestTask(activity.get()).execute("technical events");
+                            new RequestTask(activity.get()).execute("non technical events");
+                            new RequestTask(activity.get()).execute("online events");
+                            return;
                         }
-                    } catch (Exception e) {
-                        Log.i(TAG, e.toString());
+                    } else if (m.hasCard()) {
+                        if (cards == null) {
+                            cards = new ArrayList<>();
+                            cardMessage = new Message();
+                            cardMessage.setTimeStamp(new Date().getTime());
+                            cardMessage.setMessageType(MessageType.OTHER_CARDS);
+                        }
+                        Cards card = new Cards();
+                        card.setTitle(m.getCard().getTitle());
+                        card.setSubtitle(m.getCard().getSubtitle());
+                        card.setImgUrl(m.getCard().getImageUri());
+                        cards.add(card);
+                    } else if (m.hasText()) {
+                        Message msg = new Message();
+                        msg.setTimeStamp(new Date().getTime());
+                        msg.setMessageType(MessageType.OTHER);
+                        msg.setText(m.getText().getText(0));
+                        addMessage(msg);
                     }
-                    if (cardMessage != null) {
-                        cardMessage.setCards(cards);
-                        addMessage(cardMessage);
-                    }
+                }
+                if (cardMessage != null) {
+                    cardMessage.setCards(cards);
+                    addMessage(cardMessage);
                 }
             } else {
                 Toast.makeText(activity.get(), "Oops! Something went wrong.\nPlease Check your Network.", Toast.LENGTH_SHORT).show();
@@ -223,6 +202,7 @@ public class ChatBotActivity extends AppCompatActivity {
         }
 
         void addMessage(Message message) {
+            activity.get().currentMessage.setStatus(com.flaminus2k18.flaminuschatbot.model.Status.SENT);
             activity.get().chatMessages.add(message);
             activity.get().chatsAdapter.notifyDataSetChanged();
             activity.get().chatList.smoothScrollToPosition(activity.get().chatsAdapter.getItemCount());

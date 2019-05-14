@@ -1,6 +1,6 @@
 package com.flaminus2k18.flaminuschatbot.model;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Created by jaisel on 25/11/17.
@@ -13,7 +13,7 @@ public class Message {
     private long timeStamp;
     private Status status;
     private MessageType messageType;
-    private Vector<Cards> cards;
+    private ArrayList<Cards> cards;
 
     public int getId() {
         return id;
@@ -39,11 +39,11 @@ public class Message {
         this.text = text;
     }
 
-    public Vector<Cards> getCards() {
+    public ArrayList<Cards> getCards() {
         return cards;
     }
 
-    public void setCards(Vector<Cards> cards) {
+    public void setCards(ArrayList<Cards> cards) {
         this.cards = cards;
     }
 

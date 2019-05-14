@@ -13,24 +13,24 @@ import com.flaminus2k18.flaminuschatbot.R;
 import com.flaminus2k18.flaminuschatbot.app.AppController;
 import com.flaminus2k18.flaminuschatbot.model.Cards;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Created by jaisel on 12/1/18.
  */
 
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
-    private Vector<Cards> cards;
+    private ArrayList<Cards> cards;
     private Context context;
 
-    public CardsAdapter(Context context, Vector<Cards> cards) {
+    public CardsAdapter(Context context, ArrayList<Cards> cards) {
         this.context = context;
         this.cards = cards;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Cards card = cards.elementAt(position);
+        Cards card = cards.get(position);
         holder.title.setText(card.getTitle());
         if (card.getSubtitle() != null) {
             holder.subtitle.setVisibility(View.VISIBLE);
