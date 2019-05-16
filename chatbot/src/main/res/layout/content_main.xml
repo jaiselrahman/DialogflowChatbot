@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#D8D4D4"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.flaminus2k18.flaminuschatbot.ChatBotActivity"
+    tools:context="com.jaiselrahman.dfchatbot.ChatBotActivity"
     tools:showIn="@layout/activity_main">
 
     <androidx.recyclerview.widget.RecyclerView

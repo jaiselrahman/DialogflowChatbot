@@ -1,4 +1,4 @@
-package com.flaminus2k18.flaminuschatbot.adapter;
+package com.jaiselrahman.dfchatbot.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.flaminus2k18.flaminuschatbot.R;
-import com.flaminus2k18.flaminuschatbot.app.AppController;
-import com.flaminus2k18.flaminuschatbot.model.Cards;
+import com.jaiselrahman.dfchatbot.R;
+import com.jaiselrahman.dfchatbot.app.AppController;
+import com.jaiselrahman.dfchatbot.model.Cards;
 
 import java.util.ArrayList;
 

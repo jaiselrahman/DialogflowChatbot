@@ -1,4 +1,4 @@
-package com.flaminus2k18.flaminuschatbot.model;
+package com.jaiselrahman.dfchatbot.model;
 
 import java.util.ArrayList;
 

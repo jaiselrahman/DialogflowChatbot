@@ -1,4 +1,4 @@
-package com.flaminus2k18.flaminuschatbot.app;
+package com.jaiselrahman.dfchatbot.app;
 
 import android.app.Application;
 import android.text.TextUtils;
@@ -7,7 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.flaminus2k18.flaminuschatbot.volley.LruBitmapCache;
+import com.jaiselrahman.dfchatbot.volley.LruBitmapCache;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;

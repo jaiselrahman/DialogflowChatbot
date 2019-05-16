@@ -1,4 +1,4 @@
-package com.flaminus2k18.flaminuschatbot.volley;
+package com.jaiselrahman.dfchatbot.volley;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;

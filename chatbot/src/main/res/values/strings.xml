@@ -3,7 +3,6 @@
 
     <string name="app_name">DF chatbot</string>
     <string name="type_your_message">Type a message</string>
-    <string name="access_key">777ded9b0133464ab7381356d71f5f86</string>
     <string name="send">Send</string>
 
 </resources>

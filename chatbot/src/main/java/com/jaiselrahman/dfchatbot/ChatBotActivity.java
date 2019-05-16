@@ -1,4 +1,4 @@
-package com.flaminus2k18.flaminuschatbot;
+package com.jaiselrahman.dfchatbot;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,11 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.flaminus2k18.flaminuschatbot.adapter.ChatsAdapter;
-import com.flaminus2k18.flaminuschatbot.model.Cards;
-import com.flaminus2k18.flaminuschatbot.model.Message;
-import com.flaminus2k18.flaminuschatbot.model.MessageType;
-import com.flaminus2k18.flaminuschatbot.model.Status;
+import com.jaiselrahman.dfchatbot.adapter.ChatsAdapter;
+import com.jaiselrahman.dfchatbot.model.Cards;
+import com.jaiselrahman.dfchatbot.model.Message;
+import com.jaiselrahman.dfchatbot.model.MessageType;
+import com.jaiselrahman.dfchatbot.model.Status;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -154,7 +154,7 @@ public class ChatBotActivity extends AppCompatActivity {
         protected void onPostExecute(DetectIntentResponse response) {
             if (response != null) {
                 if (activity.get().currentMessage != null) {
-                    activity.get().currentMessage.setStatus(com.flaminus2k18.flaminuschatbot.model.Status.SENT);
+                    activity.get().currentMessage.setStatus(com.jaiselrahman.dfchatbot.model.Status.SENT);
                 }
 
                 ArrayList<Cards> cards = null;
@@ -202,7 +202,7 @@ public class ChatBotActivity extends AppCompatActivity {
         }
 
         void addMessage(Message message) {
-            activity.get().currentMessage.setStatus(com.flaminus2k18.flaminuschatbot.model.Status.SENT);
+            activity.get().currentMessage.setStatus(com.jaiselrahman.dfchatbot.model.Status.SENT);
             activity.get().chatMessages.add(message);
             activity.get().chatsAdapter.notifyDataSetChanged();
             activity.get().chatList.smoothScrollToPosition(activity.get().chatsAdapter.getItemCount());

@@ -1,4 +1,4 @@
-package com.flaminus2k18.flaminuschatbot;
+package com.jaiselrahman.dfchatbot;
 
 import org.json.JSONException;
 import org.json.JSONObject;

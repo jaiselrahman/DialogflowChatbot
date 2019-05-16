@@ -1,4 +1,4 @@
-package com.flaminus2k18.flaminuschatbot.adapter;
+package com.jaiselrahman.dfchatbot.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,9 +10,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.flaminus2k18.flaminuschatbot.R;
-import com.flaminus2k18.flaminuschatbot.model.Message;
-import com.flaminus2k18.flaminuschatbot.model.MessageType;
+import com.jaiselrahman.dfchatbot.R;
+import com.jaiselrahman.dfchatbot.model.Message;
+import com.jaiselrahman.dfchatbot.model.MessageType;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
