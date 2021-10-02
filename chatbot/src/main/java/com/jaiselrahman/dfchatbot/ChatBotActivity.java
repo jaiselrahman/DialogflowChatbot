@@ -117,7 +117,7 @@ public class ChatBotActivity extends AppCompatActivity {
     }
 
     void sendWelcomeEvent() {
-        new RequestTask(this).execute();
+        new RequestTask(this).execute("Hi");
     }
 
     private void sendMessage(String message) {
@@ -202,7 +202,9 @@ public class ChatBotActivity extends AppCompatActivity {
         }
 
         void addMessage(Message message) {
-            activity.get().currentMessage.setStatus(com.jaiselrahman.dfchatbot.model.Status.SENT);
+            if(activity.get().currentMessage != null) {
+                activity.get().currentMessage.setStatus(com.jaiselrahman.dfchatbot.model.Status.SENT);
+            }
             activity.get().chatMessages.add(message);
             activity.get().chatsAdapter.notifyDataSetChanged();
             activity.get().chatList.smoothScrollToPosition(activity.get().chatsAdapter.getItemCount());
